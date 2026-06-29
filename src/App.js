@@ -16,22 +16,7 @@ function App() {
       "##########",
   ], []);
 
-  // Keyboard event listener
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      switch (e.key) {
-        case 'ArrowLeft': movePlayer(-1, 0); break;
-        case 'ArrowRight': movePlayer(1, 0); break;
-        case 'ArrowUp': movePlayer(0, -1); break;
-        case 'ArrowDown': movePlayer(0, 1); break;
-        default: break;
-      }
-  };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
-
+  // Define movePlayer before useEffect
   const movePlayer = useCallback((dx, dy) => {
     setPlayerPosition((prev) => {
       const newX = prev.x + dx;
@@ -50,6 +35,21 @@ function App() {
     });
   }, [MAP]);
 
+  // Keyboard event listener
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      switch (e.key) {
+        case 'ArrowLeft': movePlayer(-1, 0); break;
+        case 'ArrowRight': movePlayer(1, 0); break;
+        case 'ArrowUp': movePlayer(0, -1); break;
+        case 'ArrowDown': movePlayer(0, 1); break;
+        default: break;
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [movePlayer]);
   useEffect(() => {
     const interval = setInterval(() => {
       setEnemies((prevEnemies) =>

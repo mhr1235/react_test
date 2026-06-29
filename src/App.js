@@ -105,20 +105,20 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <div>
-          <p>Use arrow keys or buttons to move</p>
-          <p>Player: @ | Enemy: E | Wall: #</p>
+          <p className="glow">Use arrow keys or buttons to move</p>
+          <p className="glow">Player: @ | Enemy: E | Wall: #</p>
         </div>
-        <div style={{ fontFamily: 'monospace', fontSize: '16px', whiteSpace: 'pre', display: 'inline-block' }}>
-          {renderMap()}
+        <div className="game-area">
+          <div className="ascii-text">{renderMap()}</div >
         </div>
         <div>
-          <button onClick={() => movePlayer(-1, 0)}>Left</button>
-          <button onClick={() => movePlayer(1, 0)}>Right</button>
-          <button onClick={() => movePlayer(0, -1)}>Up</button>
-          <button onClick={() => movePlayer(0, 1)}>Down</button>
+          <button className="button-gradient" onClick={() => movePlayer(-1, 0)}>Left</button>
+          <button className="button-gradient" onClick={() => movePlayer(1, 0)}>Right</button>
+          <button className="button-gradient" onClick={() => movePlayer(0, -1)}>Up</button>
+          <button className="button-gradient" onClick={() => movePlayer(0, 1)}>Down</button>
         </div>
       </header>
-    </div>
+    </div >
   );
 }
 

@@ -1,5 +1,26 @@
 .App {
   text-align: center;
+  background: linear-gradient(135deg, #0f0, #0ff, #f0f);
+  color: #000;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: monospace;
+  padding: 20px;
+}
+
+.App-header {
+  background-color: transparent;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: #000;
+  position: relative;
 }
 
 .App-logo {
@@ -7,10 +28,9 @@
   pointer-events: none;
   display: block;
   margin: 0 auto;
-  /* Add this to ensure the logo is visible */
   max-width: none;
-  /* Add this to ensure the spinning animation works */
   animation: App-logo-spin infinite 20s linear;
+  filter: brightness(150%) contrast(120%);
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -19,26 +39,89 @@
   }
 }
 
-.App-header {
-  background-color: #08e146;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
 .App-link {
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+/* Neon gradient styles */
+.neon-gradient {
+  background: linear-gradient(135deg, #0f0, #0ff, #f0f);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: neon 2s infinite;
+}
+
+@keyframes neon {
+  0% {
+    background-position: 0% 50%;
   }
-  to {
-    transform: rotate(360deg);
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
   }
 }
+
+/* Glowing text effect */
+.glow {
+  text-shadow: 
+    0 0 5px #0f0,
+    0 0 10px #0ff,
+    0 0 20px #f0f,
+    0 0 40px #0f0,
+    0 0 80px #0ff,
+    0 0 160px #f0f;
+}
+
+/* Gradient background for the game area */
+.game-area {
+  background: linear-gradient(135deg, #0f0, #0ff, #f0f);
+  padding: 20px;
+  border-radius: 10px;
+  color: #000;
+  white-space: pre;
+  font-size: 16px;
+  margin-top: 20px;
+  animation: gradientMove 10s infinite alternate;
+}
+
+/* White ASCII text on the game area */
+.game-area .ascii-text {
+  color: #fff !important;
+  text-shadow: none !important;
+}
+
+@keyframes gradientMove {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+/* Gradient text for the game area */
+.game-area .neon-text {
+  background: linear-gradient(135deg, #0f0, #0ff, #f0f);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: neon 2s infinite;
+}
+
+/* Gradient for the buttons */
+.button-gradient {
+  background: linear-gradient(135deg, #0f0, #0ff, #f0f);
+  color: #000;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.button-gradient:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 10px #0f0, 0 0 20px #0ff, 0 0 30px #f0f;
+}
+

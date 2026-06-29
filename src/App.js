@@ -105,7 +105,7 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <div>
-          <p className="glow">Use arrow keys or buttons to move</p>
+          <p className="glow">Use arrow keys or buttons to move the player '@' around the map. Avoid running into enemies 'E' and walls '#'. Enjoy the game!</p>
           <p className="glow">Player: @ | Enemy: E | Wall: #</p>
         </div>
         <div className="game-area">
@@ -123,4 +123,3 @@ function App() {
 }
 
 export default App;
-

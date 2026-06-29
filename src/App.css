@@ -3,13 +3,12 @@
 }
 
 .App-logo {
-  height: 10vmin; /* Reduced from 40vmin */
+  height: 20vmin; /* Reduced from 40vmin */
   pointer-events: none;
   display: block;
   margin: 0 auto;
   /* Add this to ensure the logo is visible */
-  max-width: 100%;
-  height: auto;
+  max-width: none;
   /* Add this to ensure the spinning animation works */
   animation: App-logo-spin infinite 20s linear;
 }

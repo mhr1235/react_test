@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import logo from './logo.svg';
+import './App.css';
 
 function App() {
   const [playerPosition, setPlayerPosition] = useState({ x: 1, y: 1 });

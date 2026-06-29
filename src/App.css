@@ -3,8 +3,15 @@
 }
 
 .App-logo {
-  height: 40vmin;
+  height: 10vmin; /* Reduced from 40vmin */
   pointer-events: none;
+  display: block;
+  margin: 0 auto;
+  /* Add this to ensure the logo is visible */
+  max-width: 100%;
+  height: auto;
+  /* Add this to ensure the spinning animation works */
+  animation: App-logo-spin infinite 20s linear;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -14,7 +21,7 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: #08e146;
   min-height: 100vh;
   display: flex;
   flex-direction: column;

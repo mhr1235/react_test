@@ -109,7 +109,7 @@ function App() {
           <p className="glow">Player: @ | Enemy: E | Wall: #</p>
         </div>
         <div className="game-area">
-          <div className="ascii-text">{renderMap()}</div >
+          <div className="ascii-text">{renderMap()}</div>
         </div>
         <div>
           <button className="button-gradient" onClick={() => movePlayer(-1, 0)}>Left</button>
@@ -118,7 +118,7 @@ function App() {
           <button className="button-gradient" onClick={() => movePlayer(0, 1)}>Down</button>
         </div>
       </header>
-    </div >
+    </div>
   );
 }
 

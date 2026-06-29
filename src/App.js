@@ -1,13 +1,11 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import logo from './logo.svg';
 
 function App() {
   const [playerPosition, setPlayerPosition] = useState({ x: 1, y: 1 });
   const [enemies, setEnemies] = useState([{ x: 5, y: 5 }]);
 
-  // Memoize the MAP array to prevent unnecessary re-renders
-  const MAP = useMemo(() => {
-    return [
+  const MAP = useMemo(() => [
       "##########",
       "#        #",
       "#        #",
@@ -16,26 +14,42 @@ function App() {
       "#        #",
       "#        #",
       "##########",
-    ];
-  }, []);
+  ], []);
 
-  // Move player
-  const movePlayer = (dx, dy) => {
-    const newX = playerPosition.x + dx;
-    const newY = playerPosition.y + dy;
-
-    // Check if the new position is within the map
-    if (
-      newX >= 0 &&
-      newX < MAP[0].length &&
-      newY >= 0 &&
-      newY < MAP.length
-    ) {
-      setPlayerPosition({ x: newX, y: newY });
-    }
+  // Keyboard event listener
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      switch (e.key) {
+        case 'ArrowLeft': movePlayer(-1, 0); break;
+        case 'ArrowRight': movePlayer(1, 0); break;
+        case 'ArrowUp': movePlayer(0, -1); break;
+        case 'ArrowDown': movePlayer(0, 1); break;
+        default: break;
+      }
   };
 
-  // Move enemies
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  const movePlayer = useCallback((dx, dy) => {
+    setPlayerPosition((prev) => {
+      const newX = prev.x + dx;
+      const newY = prev.y + dy;
+
+      if (
+        newX >= 0 &&
+        newX < MAP[0].length &&
+        newY >= 0 &&
+        newY < MAP.length &&
+        MAP[newY][newX] !== '#'
+      ) {
+        return { x: newX, y: newY };
+      }
+      return prev;
+    });
+  }, [MAP]);
+
   useEffect(() => {
     const interval = setInterval(() => {
       setEnemies((prevEnemies) =>
@@ -45,12 +59,12 @@ function App() {
           const newX = enemy.x + dx;
           const newY = enemy.y + dy;
 
-          // Check if the new position is within the map
           if (
             newX >= 0 &&
             newX < MAP[0].length &&
             newY >= 0 &&
-            newY < MAP.length
+            newY < MAP.length &&
+            MAP[newY][newX] !== '#'
           ) {
             return { x: newX, y: newY };
           }
@@ -60,22 +74,18 @@ function App() {
     }, 500);
 
     return () => clearInterval(interval);
-  }, [MAP]); // Now MAP is a memoized value and only changes when dependencies change
+  }, [MAP]);
 
-  // Render the map
   const renderMap = () => {
-    const mapGrid = [];
+    return MAP.map((row, y) => {
+      let renderedRow = '';
+      for (let x = 0; x < row.length; x++) {
+        let cell = row[x];
 
-    for (let y = 0; y < MAP.length; y++) {
-      for (let x = 0; x < MAP[y].length; x++) {
-        let cell = MAP[y][x];
-
-        // Check if player is here
         if (x === playerPosition.x && y === playerPosition.y) {
           cell = '@';
         }
 
-        // Check if enemy is here
         const enemy = enemies.find(
           (enemy) => enemy.x === x && enemy.y === y
         );
@@ -83,39 +93,33 @@ function App() {
           cell = 'E';
         }
 
-        mapGrid.push(cell);
+        renderedRow += cell;
       }
-    }
-
-    return mapGrid.join('');
+      return renderedRow;
+    }).join('\n');
   };
 
   return (
     <div className="App">
       <header className="App-header">
-      <img src={logo} className="App-logo" alt="logo" />
-
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Hello Mark
-        </a>
+        <img src={logo} className="App-logo" alt="logo" />
+        <div>
+          <p>Use arrow keys or buttons to move</p>
+          <p>Player: @ | Enemy: E | Wall: #</p>
+        </div>
+        <div style={{ fontFamily: 'monospace', fontSize: '16px', whiteSpace: 'pre', display: 'inline-block' }}>
+          {renderMap()}
+        </div>
+        <div>
+          <button onClick={() => movePlayer(-1, 0)}>Left</button>
+          <button onClick={() => movePlayer(1, 0)}>Right</button>
+          <button onClick={() => movePlayer(0, -1)}>Up</button>
+          <button onClick={() => movePlayer(0, 1)}>Down</button>
+        </div>
       </header>
-      <div style={{ whiteSpace: 'pre' }}>{renderMap()}</div>
-      <div>
-        <button onClick={() => movePlayer(-1, 0)}>Left</button>
-        <button onClick={() => movePlayer(1, 0)}>Right</button>
-        <button onClick={() => movePlayer(0, -1)}>Up</button>
-        <button onClick={() => movePlayer(0, 1)}>Down</button>
-      </div>
     </div>
   );
 }
 
 export default App;
+

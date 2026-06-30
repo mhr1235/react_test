@@ -5,6 +5,8 @@ import './App.css';
 function App() {
   const [playerPosition, setPlayerPosition] = useState({ x: 1, y: 1 });
   const [enemies, setEnemies] = useState([{ x: 5, y: 5 }]);
+  const [bouncing, setBouncing] = useState(false);
+  const [flash, setFlash] = useState(false);
 
   const MAP = useMemo(() => [
       "##########",
@@ -19,6 +21,8 @@ function App() {
 
   // Define movePlayer before useEffect
   const movePlayer = useCallback((dx, dy) => {
+    if (bouncing) return;
+    
     setPlayerPosition((prev) => {
       const newX = prev.x + dx;
       const newY = prev.y + dy;
@@ -30,11 +34,36 @@ function App() {
         newY < MAP.length &&
         MAP[newY][newX] !== '#'
       ) {
+        // Check for collision with enemies
+        const enemyCollision = enemies.some(
+          (enemy) => enemy.x === newX && enemy.y === newY
+        );
+        
+        if (enemyCollision) {
+          // Set bouncing and flash state
+          setBouncing(true);
+          setFlash(true);
+          
+          // Bounce back one step in the opposite direction
+          setTimeout(() => {
+            setPlayerPosition((prevPos) => {
+              const bounceX = prevPos.x + (-dx);
+              const bounceY = prevPos.y + (-dy);
+              return { x: bounceX, y: bounceY };
+            });
+            setBouncing(false);
+            // Reset flash after bounce
+            setTimeout(() => setFlash(false), 300);
+          }, 200);
+          
+          return prev;
+        }
+        
         return { x: newX, y: newY };
       }
       return prev;
     });
-  }, [MAP]);
+  }, [MAP, enemies, bouncing]);
 
   // Keyboard event listener
   useEffect(() => {
@@ -51,6 +80,7 @@ function App() {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [movePlayer]);
+  
   useEffect(() => {
     const interval = setInterval(() => {
       setEnemies((prevEnemies) =>
@@ -84,17 +114,20 @@ function App() {
         let cell = row[x];
 
         if (x === playerPosition.x && y === playerPosition.y) {
-          cell = '@';
+          // Apply flash effect when bouncing
+          if (flash) {
+            renderedRow += '<span class="ascii-player flash">@</span>';
+          } else {
+            renderedRow += '<span class="ascii-player">@</span>';
+          }
+        } else {
+          const enemy = enemies.find((enemy) => enemy.x === x && enemy.y === y);
+          if (enemy) {
+            renderedRow += 'E';
+          } else {
+            renderedRow += cell;
+          }
         }
-
-        const enemy = enemies.find(
-          (enemy) => enemy.x === x && enemy.y === y
-        );
-        if (enemy) {
-          cell = 'E';
-        }
-
-        renderedRow += cell;
       }
       return renderedRow;
     }).join('\n');
@@ -108,8 +141,8 @@ function App() {
           <p className="glow">Use arrow keys or buttons to move the player '@' around the map. Avoid running into enemies 'E' and walls '#'. Enjoy the game!</p>
           <p className="glow">Player: @ | Enemy: E | Wall: #</p>
         </div>
-        <div className="game-area">
-          <div className="ascii-text">{renderMap()}</div>
+        <div className={`game-area ${bouncing ? 'bouncing' : ''}`}>
+          <div className="ascii-text" dangerouslySetInnerHTML={{ __html: renderMap() }}></div>
         </div>
         <div>
           <button className="button-gradient" onClick={() => movePlayer(-1, 0)}>Left</button>
@@ -117,6 +150,11 @@ function App() {
           <button className="button-gradient" onClick={() => movePlayer(0, -1)}>Up</button>
           <button className="button-gradient" onClick={() => movePlayer(0, 1)}>Down</button>
         </div>
+        {bouncing && (
+          <div className="bounce-effect">
+            <p className="glow">Collision! Bouncing back...</p>
+          </div>
+        )}
       </header>
     </div>
   );
